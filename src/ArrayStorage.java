@@ -23,6 +23,19 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
+        Resume temp = new Resume();
+        temp.uuid = "Нет такого резюме!";
+
+        for (int i = 0; i < count; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                return storage[i];
+            }
+        }
+
+        return temp;
+    }
+
+    void delete(String uuid) {
         int i;
 
         for (i = 0; i < count; i++) {
@@ -31,19 +44,8 @@ public class ArrayStorage {
             }
         }
 
-        return storage[i];
-    }
-
-    void delete(String uuid) {
-        int num = 0;
-
-        for (int i = 0; i < count; i++) {
-            if (storage[i].uuid.equals(uuid)) {
-                continue;
-            } else {
-                storage[num] = storage[i];
-                num++;
-            }
+        for (int j = i; j < count - 1; j++) {
+            storage[j] = storage[j + 1];
         }
 
         count--;
