@@ -18,16 +18,16 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        if (equalsResume(r)) {
+        if (equalsResume(r.getUuid()) != null) {
             System.out.println("\nResume: " + r.getUuid() + " was update!");
         } else {
-            System.out.println("\nError: Resume - " + r.getUuid() + " isn't in the storage!");
+            System.out.println("\nError: Resume - " + r.getUuid() + " not in the storage!");
         }
     }
 
     public void save(Resume r) {
         if (size < AMOUNT) {
-            if (equalsResume(r)) {
+            if (equalsResume(r.getUuid()) != null) {
                 System.out.println("Error: Resume - " + r.getUuid() + " had in the storage yet!");
             } else {
                 storage[size] = r;
@@ -40,17 +40,26 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        return equalsResume(uuid);
+        if (equalsResume(uuid) != null) {
+            return equalsResume(uuid);
+        }
+
+        System.out.println("Error: Resume - " + uuid + " not in the storage!");
+        return null;
     }
 
     public void delete(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                storage[i] = storage[size - 1];
-                storage[size - 1] = null;
-                size--;
-                System.out.println("\nResume - " + uuid + " was delete!");
+        if (equalsResume(uuid) != null) {
+            for (int i = 0; i < size; i++) {
+                if (storage[i].getUuid().equals(uuid)) {
+                    storage[i] = storage[size - 1];
+                    storage[size - 1] = null;
+                    size--;
+                    System.out.println("\nResume - " + uuid + " was delete!");
+                }
             }
+        } else {
+            System.out.println("Error: Resume - " + uuid + " not in the storage!");
         }
     }
 
@@ -66,17 +75,6 @@ public class ArrayStorage {
     }
 
     //Equals resumes in the storage
-    private boolean equalsResume(Resume resume) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(resume.getUuid())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    //Equals resumes strings in the storage
     private Resume equalsResume(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
@@ -84,7 +82,6 @@ public class ArrayStorage {
             }
         }
 
-        System.out.println("\nError: Resume - " + uuid + " isn't in the storage");
         return null;
     }
 }
