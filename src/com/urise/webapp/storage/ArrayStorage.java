@@ -8,43 +8,31 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
-    private static int count;
-    private boolean isAnswer = false;
+    private final int AMOUNT = 10000;
+    private Resume[] storage = new Resume[AMOUNT];
+    private static int size = 0;
 
     public void clear() {
-        Arrays.fill(storage, 0, count, null);
-        count = 0;
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
     }
 
     public void update(Resume r) {
-        for (int i = 0; i < count; i++) {
-            if (storage[i].getUuid().equals(r.getUuid())) {
-                System.out.println("\nUpdate: Resume - " + r.getUuid() + " обновлено!");
-                isAnswer = true;
-                break;
-            }
-        }
-
-        if (!isAnswer) {
-            System.out.println("\nError update: Resume " + r.getUuid() + " невозможно обновить, т.к. его нет в архиве!");
+        if (equalsResume(r)) {
+            System.out.println("\nResume: " + r.getUuid() + " was update!");
+        } else {
+            System.out.println("\nError: Resume - " + r.getUuid() + " isn't in the storage!");
         }
     }
 
     public void save(Resume r) {
-        if (count < 10000) {
-            for (int i = 0; i < count; i++) {
-                if (storage[i].getUuid().equals(r.getUuid())) {
-                    System.out.println("\nError save: Resume - " + r.getUuid() + " уже существует в архиве!");
-                    isAnswer = true;
-                    break;
-                }
-            }
-
-            if (!isAnswer) {
-                System.out.println("Save: Resume - " + r.getUuid() + " добавлено в архив!");
-                storage[count] = r;
-                count++;
+        if (size < AMOUNT) {
+            if (equalsResume(r)) {
+                System.out.println("Error: Resume - " + r.getUuid() + " had in the storage yet!");
+            } else {
+                storage[size] = r;
+                size++;
+                System.out.println("Resume - " + r.getUuid() + " was saved in the storage!");
             }
         } else {
             System.out.println("Закончилось свободное место для новых резюме!");
@@ -52,36 +40,17 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        Resume temp = new Resume();
-        temp.setUuid("Error! Resume - " + uuid + " не существует!");
-
-        for (int i = 0; i < count; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
-        }
-
-        return temp;
+        return equalsResume(uuid);
     }
 
     public void delete(String uuid) {
-        int i;
-
-        for (i = 0; i < count; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                System.out.println("\nDelete: Resume - " + uuid + " было удалено из архива!");
-                isAnswer = true;
-                break;
+                storage[i] = storage[size - 1];
+                storage[size - 1] = null;
+                size--;
+                System.out.println("\nResume - " + uuid + " was delete!");
             }
-        }
-
-        if (isAnswer) {
-            for (int j = i; j < count - 1; j++) {
-                storage[j] = storage[j + 1];
-            }
-            count--;
-        } else {
-            System.out.println("\nError delete: Resume - " + uuid + " нет в архиве, невозможно удалить данное резюме!");
         }
     }
 
@@ -89,10 +58,34 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        return Arrays.copyOf(storage, count);
+        return Arrays.copyOf(storage, size);
     }
 
     public int size() {
-        return count;
+        return size;
+    }
+
+    //Equals resumes in the storage
+    private boolean equalsResume(Resume resume) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(resume.getUuid())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //Equals resumes strings in the storage
+    private Resume equalsResume(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return storage[i];
+            }
+        }
+
+        System.out.println("\nError: Resume - " + uuid + " isn't in the storage");
+        return null;
     }
 }
+
