@@ -35,7 +35,7 @@ public class ArrayStorage {
                 System.out.println("Resume - " + r.getUuid() + " was saved in the storage!");
             }
         } else {
-            System.out.println("Закончилось свободное место для новых резюме!");
+            System.out.println("Out of space for new resumes!");
         }
     }
 
