@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class ArrayStorage {
     private final int AMOUNT = 10000;
     private Resume[] storage = new Resume[AMOUNT];
-    private static int size = 0;
+    private int size = 0;
     private int num;
 
     public void clear() {
@@ -18,27 +18,27 @@ public class ArrayStorage {
         size = 0;
     }
 
-    public void update(Resume r) {
-        num = equalsResume(r.getUuid());
+    public void update(Resume resume) {
+        num = equalsResume(resume.getUuid());
 
-        if (storage[num] != null) {
-            storage[num] = r;
-            System.out.println("\nResume: " + r.getUuid() + " was update!");
+        if (num != -1) {
+            storage[num] = resume;
+            System.out.println("\nResume: " + resume.getUuid() + " was update!");
         } else {
-            System.out.println("\nError: Resume - " + r.getUuid() + " not in the storage!");
+            System.out.println("\nError: Resume - " + resume.getUuid() + " not in the storage!");
         }
     }
 
-    public void save(Resume r) {
-        num = equalsResume(r.getUuid());
+    public void save(Resume resume) {
+        num = equalsResume(resume.getUuid());
 
         if (size < AMOUNT) {
-            if (storage[num] != null) {
-                System.out.println("Error: Resume - " + r.getUuid() + " had in the storage yet!");
+            if (num != -1) {
+                System.out.println("Error: Resume - " + resume.getUuid() + " had in the storage yet!");
             } else {
-                storage[size] = r;
+                storage[size] = resume;
                 size++;
-                System.out.println("Resume - " + r.getUuid() + " was saved in the storage!");
+                System.out.println("Resume - " + resume.getUuid() + " was saved in the storage!");
             }
         } else {
             System.out.println("Out of space for new resumes!");
@@ -48,7 +48,7 @@ public class ArrayStorage {
     public Resume get(String uuid) {
         num = equalsResume(uuid);
 
-        if (storage[num] != null) {
+        if (num != -1) {
             return storage[num];
         }
 
@@ -59,18 +59,13 @@ public class ArrayStorage {
     public void delete(String uuid) {
         num = equalsResume(uuid);
 
-        if (storage[num] != null) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
-                    storage[i] = storage[size - 1];
-                    storage[size - 1] = null;
-                    size--;
-                    System.out.println("\nResume - " + uuid + " was delete!");
-                }
-            }
-        } else {
+        if (num != -1) {
+            storage[num] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
+            System.out.println("\nResume - " + uuid + " was delete!");
+        } else
             System.out.println("Error: Resume - " + uuid + " not in the storage!");
-        }
     }
 
     /**
@@ -98,7 +93,7 @@ public class ArrayStorage {
             }
         }
 
-        return i;
+        return -1;
     }
 }
 
