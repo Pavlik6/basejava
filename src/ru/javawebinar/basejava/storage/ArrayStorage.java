@@ -1,39 +1,29 @@
-package com.urise.webapp.storage;
+package ru.javawebinar.basejava.storage;
 
-import com.urise.webapp.model.Resume;
-
-import java.util.Arrays;
+import ru.javawebinar.basejava.model.Resume;
 
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
-    private final int AMOUNT = 10000;
-    private Resume[] storage = new Resume[AMOUNT];
-    private int size = 0;
-    private int num;
-
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
-    }
-
+public class ArrayStorage extends AbstractArrayStorage {
+    @Override
     public void update(Resume resume) {
-        num = equalsResume(resume.getUuid());
+        int index = getIndex(resume.getUuid());
 
-        if (num != -1) {
-            storage[num] = resume;
+        if (index != -1) {
+            storage[index] = resume;
             System.out.println("\nResume: " + resume.getUuid() + " was update!");
         } else {
             System.out.println("\nError: Resume - " + resume.getUuid() + " not in the storage!");
         }
     }
 
+    @Override
     public void save(Resume resume) {
-        num = equalsResume(resume.getUuid());
+        int index = getIndex(resume.getUuid());
 
         if (size < AMOUNT) {
-            if (num != -1) {
+            if (index != -1) {
                 System.out.println("Error: Resume - " + resume.getUuid() + " had in the storage yet!");
             } else {
                 storage[size] = resume;
@@ -45,22 +35,24 @@ public class ArrayStorage {
         }
     }
 
+    @Override
     public Resume get(String uuid) {
-        num = equalsResume(uuid);
+        int index = getIndex(uuid);
 
-        if (num != -1) {
-            return storage[num];
+        if (index != -1) {
+            return storage[index];
         }
 
         System.out.println("Error: Resume - " + uuid + " not in the storage!");
         return null;
     }
 
+    @Override
     public void delete(String uuid) {
-        num = equalsResume(uuid);
+        int index = getIndex(uuid);
 
-        if (num != -1) {
-            storage[num] = storage[size - 1];
+        if (index != -1) {
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
             System.out.println("\nResume - " + uuid + " was delete!");
@@ -69,30 +61,17 @@ public class ArrayStorage {
     }
 
     /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
-    }
-
-    public int size() {
-        return size;
-    }
-
-    /**
      * Equals Resumes in the storage
      *
      * @return index of Resume
      */
-    private int equalsResume(String uuid) {
-        int i;
-
-        for (i = 0; i < size; i++) {
+    @Override
+    protected int getIndex(String uuid) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
-
         return -1;
     }
 }
