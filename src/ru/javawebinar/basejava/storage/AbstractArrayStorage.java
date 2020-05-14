@@ -20,6 +20,58 @@ public abstract class AbstractArrayStorage implements Storage {
         size = 0;
     }
 
+    @Override
+    public void update(Resume resume) {
+        int index = getIndex(resume.getUuid());
+
+        if (index >= 0) {
+            storage[index] = resume;
+            System.out.println("\nResume: " + resume.getUuid() + " was update!");
+        } else {
+            System.out.println("\nError: Resume - " + resume.getUuid() + " not in the storage!");
+        }
+    }
+
+    @Override
+    public void save(Resume resume) {
+        int index = getIndex(resume.getUuid());
+
+        if (size < AMOUNT) {
+            if (index >= 0) {
+                System.out.println("Error: Resume - " + resume.getUuid() + " had in the storage yet!");
+            } else {
+                insertResume(resume, index);
+                System.out.println("Resume - " + resume.getUuid() + " was saved in the storage!");
+            }
+        } else {
+            System.out.println("Out of space for new resumes!");
+        }
+    }
+
+    @Override
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+
+        if (index >= 0) {
+            return storage[index];
+        }
+
+        System.out.println("Error: Resume - " + uuid + " not in the storage!");
+        return null;
+    }
+
+    @Override
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+
+        if (index >= 0) {
+            removeResume(uuid, index);
+            System.out.println("\nResume - " + uuid + " was delete!");
+        } else
+            System.out.println("Error: Resume - " + uuid + " not in the storage!");
+    }
+
+
     /**
      * @return array, contains only Resumes in storage (without null)
      */
@@ -30,4 +82,6 @@ public abstract class AbstractArrayStorage implements Storage {
 
 
     protected abstract int getIndex(String uuid);
+    protected abstract void insertResume(Resume resume, int index);
+    protected abstract void removeResume(String uuid, int index);
 }
