@@ -20,7 +20,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     protected void insertResume(Resume resume, int index) {
         int num = -(index + 1);
-        size++;
 
         for (int i = size; i > num; i--) {
             storage[i] = storage[i - 1];
@@ -34,7 +33,5 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         for (int i = index; i < size - 1; i++) {
             storage[i] = storage[i + 1];
         }
-
-        size--;
     }
 }
