@@ -8,7 +8,7 @@ import ru.javawebinar.basejava.storage.Storage;
  * Test for your ru.javawebinar.basejava.storage.Storage implementation
  */
 public class MainTestArrayStorage {
-    static final Storage ARRAY_STORAGE = new ArrayStorage()   ;
+    static final Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume("uuid1");
